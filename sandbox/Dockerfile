@@ -1,9 +1,13 @@
 # GenAI-Genesis sandbox: KiCad CLI + Python for schematic/PCB generation and ERC.
 # Uses official KiCad image for kicad-cli; adds Python and runner.
-FROM kicad/kicad:8.0
+FROM --platform=linux/amd64 kicad/kicad:8.0
+
+# Switch to root to install packages
+USER root
 
 # Install Python 3 and pip (Debian/Ubuntu in KiCad image)
-RUN apt-get update && apt-get install -y --no-install-recommends \
+RUN mkdir -p /var/lib/apt/lists/partial && \
+    apt-get update && apt-get install -y --no-install-recommends \
     python3 \
     python3-pip \
     python3-venv \
