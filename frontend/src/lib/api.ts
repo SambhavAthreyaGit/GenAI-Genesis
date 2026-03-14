@@ -2,6 +2,13 @@ import type { GenerateResponse, ProjectResponse } from "./types";
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
 
+function toFullUrl(path: string): string {
+  if (path.startsWith("http://") || path.startsWith("https://")) {
+    return path;
+  }
+  return `${API_BASE}${path.startsWith("/") ? "" : "/"}${path}`;
+}
+
 export async function generateProject(
   prompt: string,
   runErc = true
@@ -24,7 +31,13 @@ export async function generateProject(
     );
   }
 
-  return response.json();
+  const data = await response.json();
+  
+  return {
+    ...data,
+    schematic_url: toFullUrl(data.schematic_url),
+    pcb_url: toFullUrl(data.pcb_url),
+  };
 }
 
 export async function getProject(projectId: string): Promise<ProjectResponse> {
@@ -37,7 +50,13 @@ export async function getProject(projectId: string): Promise<ProjectResponse> {
     throw new Error(`Failed to fetch project: ${response.status}`);
   }
 
-  return response.json();
+  const data = await response.json();
+  
+  return {
+    ...data,
+    schematic_url: toFullUrl(data.schematic_url),
+    pcb_url: toFullUrl(data.pcb_url),
+  };
 }
 
 export function getProjectDownloadUrl(projectId: string): string {

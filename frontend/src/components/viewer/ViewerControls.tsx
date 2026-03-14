@@ -13,80 +13,44 @@ export default function ViewerControls({
 }: ViewerControlsProps) {
   return (
     <>
-      {/* Floating Viewport Controls */}
-      <div className="absolute bottom-10 right-10 flex flex-col gap-4">
-        <div className="flex flex-col glass-panel rounded-2xl p-1.5 border border-white/10 shadow-2xl">
+      {/* View Toggle - Bottom Right */}
+      <div className="absolute bottom-4 right-4 z-20">
+        <div className="flex glass-panel rounded-lg p-0.5 border border-white/10 shadow-xl">
           <button
             onClick={() => onViewChange("schematic")}
-            className={`p-4 rounded-xl transition-all ${
+            className={`px-3 py-1.5 rounded-md text-[11px] font-semibold transition-all flex items-center gap-1.5 ${
               activeView === "schematic"
                 ? "bg-primary/20 text-primary"
-                : "text-on-surface hover:bg-white/10"
+                : "text-on-surface-variant hover:text-on-surface hover:bg-white/5"
             }`}
-            title="Schematic View"
           >
-            <span className="material-symbols-outlined">schema</span>
+            <span className="material-symbols-outlined text-[14px]">schema</span>
+            Schematic
           </button>
-          <div className="h-[1px] w-8 mx-auto bg-white/10" />
           <button
             onClick={() => onViewChange("pcb")}
-            className={`p-4 rounded-xl transition-all ${
+            className={`px-3 py-1.5 rounded-md text-[11px] font-semibold transition-all flex items-center gap-1.5 ${
               activeView === "pcb"
-                ? "bg-primary/20 text-primary"
-                : "text-on-surface hover:bg-white/10"
+                ? "bg-tertiary/20 text-tertiary"
+                : "text-on-surface-variant hover:text-on-surface hover:bg-white/5"
             }`}
-            title="PCB View"
           >
-            <span className="material-symbols-outlined">developer_board</span>
+            <span className="material-symbols-outlined text-[14px]">developer_board</span>
+            PCB
           </button>
         </div>
-
-        <button
-          className="p-4 glass-panel rounded-2xl border border-white/10 text-on-surface hover:bg-white/10 transition-all shadow-2xl"
-          title="Fit to View"
-        >
-          <span className="material-symbols-outlined">fit_screen</span>
-        </button>
       </div>
 
-      {/* Board Info Overlay */}
-      <div className="absolute top-12 right-16 text-right">
-        <div className="text-[11px] text-on-surface-variant font-black uppercase tracking-[0.3em] opacity-40 mb-1">
+      {/* Project Info - Top Right */}
+      <div className="absolute top-4 right-4 text-right z-20">
+        <div className="text-[9px] text-on-surface-variant/50 font-bold uppercase tracking-wider mb-0.5">
           {activeView === "schematic" ? "Schematic" : "PCB Layout"}
         </div>
-        <div className="text-3xl font-light text-on-surface tracking-tight">
-          {projectName ? (
-            <>
-              {projectName.split("_")[0]}
-              <span className="text-primary/80">
-                .{activeView === "schematic" ? "sch" : "pcb"}
-              </span>
-            </>
-          ) : (
-            <>
-              Design<span className="text-primary/80">.preview</span>
-            </>
-          )}
-        </div>
-        <div className="mt-6 flex flex-col gap-2 items-end">
-          <div
-            className={`px-3 py-1.5 rounded-lg text-[10px] font-black border flex items-center gap-2 ${
-              activeView === "schematic"
-                ? "bg-secondary-container/10 text-secondary border-secondary/20"
-                : "bg-tertiary/10 text-tertiary border-tertiary/20"
-            }`}
-          >
-            <span
-              className={`w-1 h-1 rounded-full ${
-                activeView === "schematic" ? "bg-secondary" : "bg-tertiary"
-              }`}
-            />
-            {activeView === "schematic" ? "SCHEMATIC" : "PCB LAYOUT"}
-          </div>
-          <div className="px-3 py-1.5 rounded-lg bg-white/[0.03] text-on-surface-variant text-[10px] font-black border border-white/5 flex items-center gap-2">
-            <span className="w-1 h-1 rounded-full bg-on-surface-variant/40" />
-            KICAD FORMAT
-          </div>
+        <div className="text-sm font-light text-on-surface/80 tracking-tight">
+          {projectName?.slice(0, 8) || "Design"}
+          <span className="text-primary/60">
+            .{activeView === "schematic" ? "sch" : "pcb"}
+          </span>
         </div>
       </div>
     </>

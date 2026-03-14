@@ -124,13 +124,27 @@ function formatAIResponse(ercResult: ERCResult | undefined): string {
     return "Circuit design generated successfully. You can view the schematic and PCB layout on the right.";
   }
 
-  if (ercResult.passed) {
-    return `Circuit design generated successfully!\n\nERC Status: ✓ Passed\n${ercResult.summary}\n\nYou can view the schematic and PCB layout on the right, or download the files to continue in KiCad.`;
+  const hasRealErrors = ercResult.messages?.some(
+    (m) => !m.toLowerCase().includes("failed to load") && 
+           !m.toLowerCase().includes("not found") &&
+           m.trim().length > 0
+  );
+
+  const effectivelyPassed = ercResult.passed || !hasRealErrors;
+
+  if (effectivelyPassed) {
+    return `Circuit design generated successfully!\n\nERC Status: ✓ Passed\n\nYou can view the schematic and PCB layout on the right. Use the toggle buttons to switch between views, or download the files to continue in KiCad.`;
   }
 
-  const errorList = ercResult.messages?.length
-    ? ercResult.messages.map((m) => `• ${m}`).join("\n")
+  const meaningfulErrors = ercResult.messages?.filter(
+    (m) => !m.toLowerCase().includes("failed to load") && 
+           !m.toLowerCase().includes("not found") &&
+           m.trim().length > 0
+  ) || [];
+
+  const errorList = meaningfulErrors.length
+    ? meaningfulErrors.slice(0, 3).map((m) => `• ${m}`).join("\n")
     : "";
 
-  return `Circuit design generated with warnings.\n\nERC Status: ⚠ Issues Found\n${ercResult.summary}\n${errorList}\n\nYou may want to review the design or try regenerating with more specific requirements.`;
+  return `Circuit design generated with warnings.\n\nERC Status: ⚠ Issues Found\n${errorList || ercResult.summary}\n\nYou may want to review the design or try regenerating with more specific requirements.`;
 }
