@@ -1,0 +1,2 @@
+# Optional: kiutils for richer schematic/PCB generation later.
+# kiutils>=1.4.0
